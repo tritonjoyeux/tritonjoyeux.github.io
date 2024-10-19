@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compte à Rebours - Monster Hunter Wilds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #283E51, #0A2342);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 2;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: space-around;
+      width: 80%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      margin-bottom: 30px;
+      z-index: 2;
+    }
+
+    .countdown div {
+      text-align: center;
+    }
+
+    .countdown div span {
+      display: block;
+      font-size: 2.5rem;
+      font-weight: 600;
+    }
+
+    .countdown div small {
+      display: block;
+      font-size: 1rem;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Styles pour les logos */
+    .logos {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-a, .logo-b {
+      width: 800px;
+      height: auto;
+      margin: 10px;
+      z-index: 2;
+    }
+
+    .logo-a {
+        position: absolute;
+    }
+
+    /* Logo C en position absolue derrière */
+    .logo-c {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      width: 550px;
+      z-index: 0;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="logos">
+    <img src="https://www.monsterhunter.com/wilds/assets/img/mainVisual/logo_a.png" alt="Logo A" class="logo-a">
+    <img src="https://www.monsterhunter.com/wilds/assets/img/mainVisual/logo_b.png" alt="Logo B" class="logo-b">
+    <img src="https://www.monsterhunter.com/wilds/assets/img/mainVisual/logo_c.png" alt="Logo C" class="logo-c">
+</div>
+
+  <div class="countdown">
+    <div>
+      <span id="days">0</span>
+      <small>Jours</small>
+    </div>
+    <div>
+      <span id="hours">0</span>
+      <small>Heures</small>
+    </div>
+    <div>
+      <span id="minutes">0</span>
+      <small>Minutes</small>
+    </div>
+    <div>
+      <span id="seconds">0</span>
+      <small>Secondes</small>
+    </div>
+  </div>
+
+  <footer>
+    <!-- Footer avec des informations supplémentaires si besoin -->
+    Monster Hunter Wilds - Compte à rebours
+  </footer>
+
+  <script>
+    // Set the date we're counting down to
+    const countDownDate = new Date("Feb 28, 2025 00:00:00").getTime();
+
+    // Update the countdown every 1 second
+    const x = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("days").innerText = days;
+      document.getElementById("hours").innerText = hours;
+      document.getElementById("minutes").innerText = minutes;
+      document.getElementById("seconds").innerText = seconds;
+
+      // If the countdown is finished, display some text
+      if (distance < 0) {
+        clearInterval(x);
+        document.querySelector('.countdown').innerHTML = "<h2>Le compte à rebours est terminé !</h2>";
+      }
+    }, 1000);
+  </script>
+
+</body>
+</html>
