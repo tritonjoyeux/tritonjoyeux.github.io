@@ -1,192 +1,165 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Citrouille 3D - Vérification Rotation</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #000;
-        }
-        #video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100px;
-            height: 75px;
-            opacity: 0;
-        }
-        canvas {
-            display: block;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compte à Rebours - Monster Hunter Wilds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #283E51, #0A2342);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 2;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: space-around;
+      width: 80%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      margin-bottom: 30px;
+      z-index: 2;
+    }
+
+    .countdown div {
+      text-align: center;
+    }
+
+    .countdown div span {
+      display: block;
+      font-size: 2.5rem;
+      font-weight: 600;
+    }
+
+    .countdown div small {
+      display: block;
+      font-size: 1rem;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Styles pour les logos */
+    .logos {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-a, .logo-b {
+      width: 800px;
+      height: auto;
+      margin: 10px;
+      z-index: 2;
+    }
+
+    .logo-a {
+        position: absolute;
+    }
+
+    /* Logo C en position absolue derrière */
+    .logo-c {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      width: 550px;
+      z-index: 0;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+  </style>
 </head>
 <body>
-    <video id="video" autoplay muted></video>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-    <script>
-        // Initialisation de la scène Three.js
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
 
-        // Création de la texture de la citrouille
-        const pumpkinTexture = new THREE.TextureLoader().load('/texture_pumpkin.jpg');
-        
-        // Création d'une géométrie de citrouille
-        const geometry = new THREE.SphereGeometry(1, 32, 32);
-        geometry.scale(1.5, 1.2, 1.5); // Applatir pour donner une forme de citrouille
+  <div class="logos">
+    <img src="https://www.monsterhunter.com/wilds/assets/img/mainVisual/logo_a.png" alt="Logo A" class="logo-a">
+    <img src="https://www.monsterhunter.com/wilds/assets/img/mainVisual/logo_b.png" alt="Logo B" class="logo-b">
+    <img src="https://www.monsterhunter.com/wilds/assets/img/mainVisual/logo_c.png" alt="Logo C" class="logo-c">
+</div>
 
-        // Ajouter un "stem" (queue de la citrouille)
-        const stemGeometry = new THREE.CylinderGeometry(0.1, 0.2, 0.5, 32);
-        const stemMaterial = new THREE.MeshBasicMaterial({ color: 'green' });
-        const stem = new THREE.Mesh(stemGeometry, stemMaterial);
-        stem.position.y = 1.4; // Ajuster pour qu'il soit sur la citrouille
+  <div class="countdown">
+    <div>
+      <span id="days">0</span>
+      <small>Jours</small>
+    </div>
+    <div>
+      <span id="hours">0</span>
+      <small>Heures</small>
+    </div>
+    <div>
+      <span id="minutes">0</span>
+      <small>Minutes</small>
+    </div>
+    <div>
+      <span id="seconds">0</span>
+      <small>Secondes</small>
+    </div>
+  </div>
 
-        // Appliquer le matériau de la citrouille
-        const material = new THREE.MeshBasicMaterial({ map: pumpkinTexture });
-        const pumpkin = new THREE.Mesh(geometry, material);
-        pumpkin.add(stem); // Ajouter la queue à la citrouille
+  <footer>
+    <!-- Footer avec des informations supplémentaires si besoin -->
+    Monster Hunter Wilds - Compte à rebours
+  </footer>
 
-        // Créer les yeux
-        const eyeGeometry = new THREE.SphereGeometry(0.1, 16, 16);
-        eyeGeometry.scale(2, 2.5, 0.001); // Aplatir pour donner une forme d'œil
-        const eyeMaterial = new THREE.MeshBasicMaterial({ color: 'white' });
+  <script>
+    // Set the date we're counting down to
+    const countDownDate = new Date("Feb 28, 2025 00:00:00").getTime();
 
-        // Positionner le premier œil
-        const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-        leftEye.position.set(-0.5, 0.7, 1.2); // Ajuste la position selon la taille et la forme de la citrouille
-        leftEye.rotation.x = -Math.PI/5; // Inverser la rotation pour le premier œil
+    // Update the countdown every 1 second
+    const x = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
 
-        // Positionner le second œil
-        const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-        rightEye.position.set(0.5, 0.7, 1.2); // Ajuste la position selon la taille et la forme de la citrouille
-        rightEye.rotation.x = -Math.PI/5; // Inverser la rotation pour le second œil
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        const pupilleGeometry = new THREE.SphereGeometry(0.05, 16, 16);
-        const pupilleMaterial = new THREE.MeshBasicMaterial({ color: 'black' });
-        pupilleGeometry.scale(2, 2, 0.001); // Aplatir pour donner une forme de pupille
+      document.getElementById("days").innerText = days;
+      document.getElementById("hours").innerText = hours;
+      document.getElementById("minutes").innerText = minutes;
+      document.getElementById("seconds").innerText = seconds;
 
-        // Positionner la pupille du premier œil
-        const leftPupille = new THREE.Mesh(pupilleGeometry, pupilleMaterial);
+      // If the countdown is finished, display some text
+      if (distance < 0) {
+        clearInterval(x);
+        document.querySelector('.countdown').innerHTML = "<h2>Le compte à rebours est terminé !</h2>";
+      }
+    }, 1000);
+  </script>
 
-        // Positionner la pupille du second œil
-        const rightPupille = new THREE.Mesh(pupilleGeometry, pupilleMaterial);
-
-        leftPupille.position.set(0, -0.1, 0.1); // Ajuste la position selon la taille et la forme de l'œil
-        rightPupille.position.set(0, -0.1, 0.1); // Ajuste la position selon la taille et la forme de l'œil
-
-        // Ajouter les pupilles aux yeux
-        leftEye.add(leftPupille);
-        rightEye.add(rightPupille);
-
-        // Ajouter les yeux à la citrouille
-        pumpkin.add(leftEye);
-        pumpkin.add(rightEye);
-
-        function convertTo3DCoords(point, videoWidth, videoHeight) {
-            const x = (point.x - videoWidth / 2) / (videoWidth / 2); // Ajustement horizontal
-            const y = (point.y - videoHeight / 2) / (videoHeight / 2); // Ajustement vertical avec décalage
-            const z = 1.2; // Position de profondeur fixe sur la citrouille
-            return [x, y, z];
-        }
-
-        // Fonction pour créer des lignes connectant des points
-        function createBrowLines(points) {
-            const geometry = new THREE.BufferGeometry();
-            const vertices = new Float32Array(points.flat());
-
-            const material = new THREE.LineBasicMaterial({ color: 'black' });
-            return new THREE.Line(geometry, material);
-        }
-
-        // Initialiser les sourcils gauche et droit
-        let leftBrowLine, rightBrowLine;
-
-        scene.add(pumpkin);
-        camera.position.z = 5;
-
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-
-        animate();
-
-        // Fonction pour démarrer la caméra
-        async function startCamera() {
-            const video = document.getElementById('video');
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
-            } catch (err) {
-                console.error("Erreur d'accès à la caméra : ", err);
-            }
-        }
-
-        // Détection de visage avec face-api.js
-        async function loadModels() {
-            await faceapi.nets.tinyFaceDetector.loadFromUri('/');
-            await faceapi.nets.faceLandmark68Net.loadFromUri('/');
-            await faceapi.nets.ssdMobilenetv1.loadFromUri('/');
-            console.log("Modèles chargés !");
-        }
-
-        async function trackFace() {
-            await loadModels();
-            const video = document.getElementById('video');
-            setInterval(async () => {
-                const r = await faceapi.detectSingleFace(video).withFaceLandmarks();
-                if (r && r.landmarks) {
-                    const { x, y, width, height } = r.detection.box;
-                    const centerX = x + width / 2;
-                    const centerY = y + height / 2;
-
-                    const maxRotation = Math.PI/12;
-                    const normalizedX = (((centerX - video.videoWidth / 2) / (video.videoWidth / 2)));
-                    const normalizedY = ((centerY - video.videoHeight / 2) / (video.videoHeight / 2));
-
-                    const smoothing = 0.1;
-                    pumpkin.rotation.y += (THREE.MathUtils.clamp(-normalizedX, -maxRotation, maxRotation) - pumpkin.rotation.y) * smoothing;
-                    pumpkin.rotation.x += (THREE.MathUtils.clamp(normalizedY, -maxRotation, maxRotation) - pumpkin.rotation.x) * smoothing;
-
-                    // Ne recalculer les positions des sourcils qu'une fois (basé sur les yeux détectés)
-                    const leftBrowPoints = r.landmarks.getLeftEyeBrow().map(point => 
-                        convertTo3DCoords(point, video.videoWidth, video.videoHeight));
-                    const rightBrowPoints = r.landmarks.getRightEyeBrow().map(point => 
-                        convertTo3DCoords(point, video.videoWidth, video.videoHeight));
-
-                    if (leftBrowLine) pumpkin.remove(leftBrowLine);
-                    if (rightBrowLine) pumpkin.remove(rightBrowLine);
-
-                    leftBrowLine = createBrowLines(leftBrowPoints);
-                    rightBrowLine = createBrowLines(rightBrowPoints);
-
-                    leftBrowLine.position.set(-0.5, 0, 1);
-                    rightBrowLine.position.set(0.5, 0, 1);
-
-                    // Fixer les sourcils pour suivre la rotation globale de la citrouille
-                    leftBrowLine.rotation.copy(pumpkin.rotation);
-                    rightBrowLine.rotation.copy(pumpkin.rotation);
-
-                    pumpkin.add(leftBrowLine);
-                    pumpkin.add(rightBrowLine);
-                }
-            }, 30);
-        }
-
-
-        window.addEventListener('load', async () => {
-            console.log(faceapi.nets)
-            await startCamera();
-            const video = document.getElementById('video');
-            video.addEventListener('play', trackFace);
-        });
-    </script>
 </body>
 </html>
